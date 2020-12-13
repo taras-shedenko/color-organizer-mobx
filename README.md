@@ -5,8 +5,8 @@ A React demo application
 ## Running
 
 ```
-npm i
-npm run start
+yarn
+yarn start
 ```
 
 ## Deployed

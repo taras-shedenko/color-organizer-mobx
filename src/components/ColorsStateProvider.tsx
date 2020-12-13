@@ -2,14 +2,15 @@
  * Implemantation of the application state provider
  * uses React Context
  */
-import React, { FunctionComponent, createContext, useContext } from 'react';
-import { useColorsState, ColorsStateApi } from '../state/colorsState';
+import React, { FunctionComponent, createContext, useContext } from "react";
+import { ColorsStateApi } from "../state/types";
+import { useColorsState } from "../state/colorsState";
 
 /**
  * React Context for the application state
  */
 const ColorsContext = createContext(
-    (null as unknown) as ReturnType<typeof useColorsState>
+  null as unknown as ReturnType<typeof useColorsState>
 );
 
 /**
@@ -17,16 +18,16 @@ const ColorsContext = createContext(
  */
 // eslint-disable-next-line react/prop-types
 export const ColorsStateProvider: FunctionComponent = ({ children }) => {
-    const colorsState = useColorsState();
+  const colorsState = useColorsState();
 
-    return (
-        <ColorsContext.Provider value={colorsState}>
-            {children}
-        </ColorsContext.Provider>
-    );
+  return (
+    <ColorsContext.Provider value={colorsState}>
+      {children}
+    </ColorsContext.Provider>
+  );
 };
 
 /**
  * Helper to get state's API from Context
  */
-export const getColors = (): ColorsStateApi => useContext(ColorsContext);
+export const useColors = (): ColorsStateApi => useContext(ColorsContext);
