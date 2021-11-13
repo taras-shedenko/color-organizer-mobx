@@ -3,15 +3,15 @@
  * deletes it and sets its rating
  */
 import React, { FunctionComponent } from "react";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Paper from "@material-ui/core/Paper";
-import Rating from "@material-ui/lab/Rating";
+import { Theme } from "@mui/material/styles";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Paper from "@mui/material/Paper";
+import Rating from "@mui/material/Rating";
 import { useColors } from "./ColorsStateProvider";
 
 /**
@@ -24,32 +24,10 @@ type ColorCardProps = {
   rating: number;
 };
 
-/**
- * Styles for the ColorCard component
- */
-const useStyles = makeStyles((theme) => ({
-  toolbar: {
-    display: "flex",
-  },
-  title: {
-    flexGrow: 1,
-  },
-  deleteButton: {
-    marginRight: -theme.spacing(3),
-  },
-  paper: {
-    height: theme.spacing(12),
-    backgroundColor: ({ color }: ColorCardProps) => color,
-  },
-  rating: {
-    paddingTop: theme.spacing(2),
-  },
-}));
-
 export const ColorCard: FunctionComponent<ColorCardProps> = (
   props: ColorCardProps
 ) => {
-  const { id, title, rating } = props;
+  const { id, title, color, rating } = props;
 
   // Get state's API
   const { deleteColor, rateColor } = useColors();
@@ -58,30 +36,44 @@ export const ColorCard: FunctionComponent<ColorCardProps> = (
   const onDelete = () => deleteColor(id);
   const onRate = (rate: number) => rateColor(id, rate);
 
-  const classes = useStyles(props);
+  // Component's style adjustments
+  const styles = {
+    toolbar: {
+      display: "flex",
+    },
+    title: {
+      flexGrow: 1,
+    },
+    deleteButton: {
+      marginRight: -3,
+    },
+    paper: {
+      height: (theme: Theme) => theme.spacing(12),
+      backgroundColor: color,
+    },
+    rating: {
+      paddingTop: 2,
+    },
+  };
 
   return (
     <Card>
       <CardContent>
-        <Toolbar className={classes.toolbar} data-testid="card-toolbar">
-          <Typography variant="h6" className={classes.title}>
+        <Toolbar sx={styles.toolbar} data-testid="card-toolbar">
+          <Typography variant="h6" sx={styles.title}>
             {title}
           </Typography>
-          <IconButton className={classes.deleteButton} onClick={onDelete}>
+          <IconButton sx={styles.deleteButton} onClick={onDelete}>
             <DeleteIcon />
           </IconButton>
         </Toolbar>
-        <Paper
-          elevation={4}
-          className={classes.paper}
-          data-testid="card-color"
-        />
+        <Paper elevation={4} sx={styles.paper} data-testid="card-color" />
         <Rating
           name={`color-rating-${id}`}
           size="large"
           value={rating}
-          className={classes.rating}
-          onChange={(e, v) => onRate(Number(v))}
+          sx={styles.rating}
+          onChange={(...[, value]) => value !== null && onRate(value)}
           data-testid="card-rating"
         />
       </CardContent>

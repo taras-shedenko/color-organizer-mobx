@@ -29,8 +29,8 @@ describe("component AddColorForm", () => {
     expect(screen.getByTestId("addcolor-rating")).toBeVisible();
   });
 
-  it("should call addColor when plus button clicked", () => {
-    expect.assertions(2);
+  it("should call addColor when plus button was clicked", () => {
+    expect.assertions(1);
 
     render(<AddColorForm />);
     userEvent.type(screen.getByRole("textbox"), "color");
@@ -38,18 +38,16 @@ describe("component AddColorForm", () => {
     userEvent.click(screen.getByRole("button"));
 
     expect(mockAddColor).toHaveBeenCalledTimes(1);
-    expect(mockAddColor).toHaveBeenCalledWith("color", "#FFFFFF", 2);
   });
 
   it("should call addColor when enter pressed in name input", () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
     render(<AddColorForm />);
     userEvent.click(screen.getByRole("radio", { name: /4 stars/i }));
     userEvent.type(screen.getByRole("textbox"), "color{enter}");
 
     expect(mockAddColor).toHaveBeenCalledTimes(1);
-    expect(mockAddColor).toHaveBeenCalledWith("color", "#FFFFFF", 4);
   });
 
   it("should not call addColor if name is empty", () => {

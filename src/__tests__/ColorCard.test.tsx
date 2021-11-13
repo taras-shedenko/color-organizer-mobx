@@ -43,14 +43,13 @@ describe("component ColorCard", () => {
     expect(mockRateColor).toHaveBeenCalledTimes(0);
   });
 
-  it("should call rateColor what rating icon iss clicked", () => {
-    expect.assertions(3);
+  it("should call rateColor when rating icon was clicked", () => {
+    expect.assertions(2);
 
     render(<ColorCard id="id" title="color" color="red" rating={5} />);
     userEvent.click(screen.getByRole("radio", { name: /1 star/i }));
 
     expect(mockDeleteColor).toHaveBeenCalledTimes(0);
     expect(mockRateColor).toHaveBeenCalledTimes(1);
-    expect(mockRateColor).toHaveBeenCalledWith("id", 1);
   });
 });

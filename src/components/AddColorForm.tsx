@@ -2,41 +2,19 @@
  * Component to add color item
  */
 import React, { useRef, useState, FunctionComponent } from "react";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import Toolbar from "@material-ui/core/Toolbar";
-import Input from "@material-ui/core/Input";
-import IconButton from "@material-ui/core/IconButton";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import Paper from "@material-ui/core/Paper";
-import Popper from "@material-ui/core/Popper";
+import { Theme } from "@mui/material/styles";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Toolbar from "@mui/material/Toolbar";
+import Input from "@mui/material/Input";
+import IconButton from "@mui/material/IconButton";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import Paper from "@mui/material/Paper";
+import Popper from "@mui/material/Popper";
 import { ChromePicker } from "react-color";
-import Rating from "@material-ui/lab/Rating";
+import Rating from "@mui/material/Rating";
 
 import { useColors } from "./ColorsStateProvider";
-
-/**
- * Styles for the AddColorForm component
- */
-const usesStyles = makeStyles((theme) => ({
-  toolbar: {
-    display: "flex",
-  },
-  textField: {
-    flexGrow: 1,
-  },
-  addButton: {
-    marginRight: -theme.spacing(3),
-  },
-  paper: {
-    height: theme.spacing(12),
-    backgroundColor: ({ color }: { color: string }) => color,
-  },
-  rating: {
-    paddingTop: theme.spacing(2),
-  },
-}));
 
 export const AddColorForm: FunctionComponent = () => {
   // Compoent's state holds name, color and rating values
@@ -46,7 +24,7 @@ export const AddColorForm: FunctionComponent = () => {
   const [isOpen, setOpen] = useState(false);
 
   // Anchor element for the color picker popper
-  const anchorEl = useRef<HTMLElement>(null);
+  const anchorEl = useRef<HTMLDivElement>(null);
 
   // Get state's API
   const { addColor } = useColors();
@@ -62,15 +40,33 @@ export const AddColorForm: FunctionComponent = () => {
     }
   };
 
-  const classes = usesStyles({ color });
+  // Component's style adjustments
+  const styles = {
+    toolbar: {
+      display: "flex",
+    },
+    textField: {
+      flexGrow: 1,
+    },
+    addButton: {
+      marginRight: -3,
+    },
+    paper: {
+      height: (theme: Theme) => theme.spacing(12),
+      backgroundColor: color,
+    },
+    rating: {
+      paddingTop: 2,
+    },
+  };
 
   return (
     <Card>
       <CardContent>
-        <Toolbar className={classes.toolbar} data-testid="addcolor-toolbar">
+        <Toolbar sx={styles.toolbar} data-testid="addcolor-toolbar">
           <Input
             value={name}
-            className={classes.textField}
+            sx={styles.textField}
             onChange={(e) => setName(e.currentTarget.value)}
             inputProps={{
               onKeyPress: (e) =>
@@ -80,7 +76,7 @@ export const AddColorForm: FunctionComponent = () => {
           />
           <IconButton
             disabled={name.length == 0}
-            className={classes.addButton}
+            sx={styles.addButton}
             onClick={submitColor}
           >
             <AddCircleOutlineIcon />
@@ -89,7 +85,7 @@ export const AddColorForm: FunctionComponent = () => {
         <Paper
           elevation={4}
           ref={anchorEl}
-          className={classes.paper}
+          sx={styles.paper}
           onClick={() => setOpen(!isOpen)}
           data-testid="addcolor-color"
         />
@@ -107,8 +103,8 @@ export const AddColorForm: FunctionComponent = () => {
           name="color-rating-new"
           value={rating}
           size="large"
-          className={classes.rating}
-          onChange={(e, v) => setRating(Number(v))}
+          sx={styles.rating}
+          onChange={(...[, value]) => setRating(Number(value))}
           data-testid="addcolor-rating"
         />
       </CardContent>

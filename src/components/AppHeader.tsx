@@ -2,24 +2,22 @@
  * Header of the application
  */
 import React, { FunctionComponent } from "react";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-
-const useStyles = makeStyles({
-  typography: {
-    flexGrow: 1,
-  },
-});
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 
 export const AppHeader: FunctionComponent = () => {
-  const classes = useStyles();
+  // Component's style adjustments
+  const styles = {
+    typography: {
+      flexGrow: 1,
+    },
+  };
 
   return (
     <AppBar position="fixed">
       <Toolbar>
-        <Typography variant="h5" align="center" className={classes.typography}>
+        <Typography variant="h5" align="center" sx={styles.typography}>
           Color Organizer
         </Typography>
       </Toolbar>

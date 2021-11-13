@@ -1,33 +1,31 @@
 /**
- * Man Application's component
+ * Main Application's component
  * Adds state to the context
  * renders header and colors list
  */
 import React, { FunctionComponent } from "react";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import Container from "@material-ui/core/Container";
+import Container from "@mui/material/Container";
 
 import AppHeader from "./AppHeader";
 import { ColorsStateProvider } from "./ColorsStateProvider";
 import ColorsList from "./ColorsList";
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    marginTop: theme.spacing(9),
-    [theme.breakpoints.down("xs")]: {
-      marginTop: theme.spacing(8),
-    },
-  },
-}));
-
 export const MainApp: FunctionComponent = () => {
-  const classes = useStyles();
+  // Component's style adjustments
+  const styles = {
+    container: {
+      marginTop: {
+        xs: 8,
+        sm: 9,
+      },
+    },
+  };
 
   return (
     <>
       <AppHeader />
       <ColorsStateProvider>
-        <Container className={classes.container}>
+        <Container sx={styles.container}>
           <ColorsList />
         </Container>
       </ColorsStateProvider>
