@@ -1,7 +1,7 @@
 /**
  * Component to add color item
  */
-import React, { useRef, useState, FunctionComponent } from "react";
+import React, { useRef, useState } from "react";
 import { Theme } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -14,9 +14,9 @@ import Popper from "@mui/material/Popper";
 import { ChromePicker } from "react-color";
 import Rating from "@mui/material/Rating";
 
-import { useColors } from "./ColorsStateProvider";
+import { useColors } from "./ColorsProvider";
 
-export const AddColorForm: FunctionComponent = () => {
+export default function AddColorForm() {
   // Compoent's state holds name, color and rating values
   const [name, setName] = useState("");
   const [color, setColor] = useState("#FFFFFF");
@@ -27,12 +27,12 @@ export const AddColorForm: FunctionComponent = () => {
   const anchorEl = useRef<HTMLDivElement>(null);
 
   // Get state's API
-  const { addColor } = useColors();
+  const { add } = useColors();
 
   // Submit color function
   const submitColor = () => {
     if (name.length > 0) {
-      addColor(name, color, rating);
+      add(name, color, rating);
       setName("");
       setColor("#FFFFFF");
       setRating(0);
@@ -110,6 +110,4 @@ export const AddColorForm: FunctionComponent = () => {
       </CardContent>
     </Card>
   );
-};
-
-export default AddColorForm;
+}

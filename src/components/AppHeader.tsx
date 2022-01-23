@@ -1,12 +1,12 @@
 /**
  * Header of the application
  */
-import React, { FunctionComponent } from "react";
+import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
-export const AppHeader: FunctionComponent = () => {
+export default function AppHeader() {
   // Component's style adjustments
   const styles = {
     typography: {
@@ -23,6 +23,4 @@ export const AppHeader: FunctionComponent = () => {
       </Toolbar>
     </AppBar>
   );
-};
-
-export default AppHeader;
+}

@@ -1,15 +1,18 @@
-import React, { FunctionComponent, ReactElement } from "react";
+import React from "react";
 import { render, RenderOptions, RenderResult } from "@testing-library/react";
 
-import { ColorsStateProvider } from "../components/ColorsStateProvider";
+import { ColorsProvider } from "../components/ColorsProvider";
 
 // eslint-disable-next-line react/prop-types
-const CustomWrapper: FunctionComponent = ({ children }) => (
-  <ColorsStateProvider>{children}</ColorsStateProvider>
-);
+interface CustomWrapperProps {
+  children: React.ReactNode;
+}
 
+function CustomWrapper({ children }: CustomWrapperProps) {
+  return <ColorsProvider>{children}</ColorsProvider>;
+}
 const customRender = (
-  ui: ReactElement,
+  ui: React.ReactElement,
   options?: Omit<RenderOptions, "queries">
 ): RenderResult => render(ui, { wrapper: CustomWrapper, ...options });
 

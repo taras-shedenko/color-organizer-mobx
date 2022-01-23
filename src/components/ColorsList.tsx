@@ -2,13 +2,14 @@
  * List of the colors
  * adds AddColorForm as first item
  */
-import React, { FunctionComponent } from "react";
+import React from "react";
+import { observer } from "mobx-react-lite";
 import Grid from "@mui/material/Grid";
 import AddColorForm from "./AddColorForm";
 import ColorCard from "./ColorCard";
-import { useColors } from "./ColorsStateProvider";
+import { useColors } from "./ColorsProvider";
 
-export const ColorsList: FunctionComponent = () => {
+export default observer(function ColorsList() {
   // Get colors list from the state's API
   const { colors } = useColors();
 
@@ -24,13 +25,11 @@ export const ColorsList: FunctionComponent = () => {
       <Grid item key="new-color-form" xs={12} sm={6} md={3} sx={styles.item}>
         <AddColorForm />
       </Grid>
-      {colors.map(({ id, title, color, rating }) => (
-        <Grid item key={id} xs={12} sm={6} md={3} sx={styles.item}>
-          <ColorCard id={id} title={title} color={color} rating={rating} />
+      {colors.map((color) => (
+        <Grid item key={color.id} xs={12} sm={6} md={3} sx={styles.item}>
+          <ColorCard color={color} />
         </Grid>
       ))}
     </Grid>
   );
-};
-
-export default ColorsList;
+});

@@ -1,6 +1,6 @@
 # Color organizer
 
-A React demo application
+Color Organizer application using MobX (after Learning React book)
 
 ## Running
 
@@ -11,4 +11,4 @@ yarn start
 
 ## Deployed
 
-[Color-organizer](https://tsh-color-organizer.netlify.app/)
+[Color-organizer](https://tsh-color-organizer-mobx.netlify.app/)

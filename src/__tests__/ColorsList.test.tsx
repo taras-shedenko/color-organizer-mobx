@@ -1,20 +1,16 @@
 import React from "react";
 import { render, screen } from "../test-utils/custom-render";
 
-import { ColorsList } from "../components/ColorsList";
+import ColorsList from "../components/ColorsList";
 
-jest.mock("../state/colorsState", () => ({
-  useColorsState: () => ({
-    colors: [
-      {
-        id: "id",
-        title: "title",
-        color: "color",
-        rating: 3,
-      },
-    ],
-  }),
-}));
+localStorage["color-organizer"] = JSON.stringify([
+  {
+    id: "id",
+    title: "title",
+    color: "color",
+    rating: 1,
+  },
+]);
 
 describe("component ColorsList", () => {
   it("should render properly", () => {

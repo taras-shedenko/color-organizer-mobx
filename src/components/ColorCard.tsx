@@ -2,7 +2,8 @@
  * Component to render a color item
  * deletes it and sets its rating
  */
-import React, { FunctionComponent } from "react";
+import React from "react";
+import { observer } from "mobx-react-lite";
 import { Theme } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -12,29 +13,23 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Paper from "@mui/material/Paper";
 import Rating from "@mui/material/Rating";
-import { useColors } from "./ColorsStateProvider";
+import { Color } from "../state/colorsStore";
+import { useColors } from "./ColorsProvider";
 
 /**
  * Props of the ColorCard component
  */
 type ColorCardProps = {
-  id: string;
-  title: string;
-  color: string;
-  rating: number;
+  color: Color;
 };
 
-export const ColorCard: FunctionComponent<ColorCardProps> = (
-  props: ColorCardProps
-) => {
-  const { id, title, color, rating } = props;
-
+export default observer(function ColorCard({ color }: ColorCardProps) {
   // Get state's API
-  const { deleteColor, rateColor } = useColors();
+  const { remove } = useColors();
 
   // Create event handlers
-  const onDelete = () => deleteColor(id);
-  const onRate = (rate: number) => rateColor(id, rate);
+  const onDelete = () => remove(color);
+  const onRate = (rate: number) => color.rate(rate);
 
   // Component's style adjustments
   const styles = {
@@ -49,7 +44,7 @@ export const ColorCard: FunctionComponent<ColorCardProps> = (
     },
     paper: {
       height: (theme: Theme) => theme.spacing(12),
-      backgroundColor: color,
+      backgroundColor: color.color,
     },
     rating: {
       paddingTop: 2,
@@ -61,7 +56,7 @@ export const ColorCard: FunctionComponent<ColorCardProps> = (
       <CardContent>
         <Toolbar sx={styles.toolbar} data-testid="card-toolbar">
           <Typography variant="h6" sx={styles.title}>
-            {title}
+            {color.title}
           </Typography>
           <IconButton sx={styles.deleteButton} onClick={onDelete}>
             <DeleteIcon />
@@ -69,9 +64,9 @@ export const ColorCard: FunctionComponent<ColorCardProps> = (
         </Toolbar>
         <Paper elevation={4} sx={styles.paper} data-testid="card-color" />
         <Rating
-          name={`color-rating-${id}`}
+          name={`color-rating-${color.id}`}
           size="large"
-          value={rating}
+          value={color.rating}
           sx={styles.rating}
           onChange={(...[, value]) => value !== null && onRate(value)}
           data-testid="card-rating"
@@ -79,6 +74,4 @@ export const ColorCard: FunctionComponent<ColorCardProps> = (
       </CardContent>
     </Card>
   );
-};
-
-export default ColorCard;
+});

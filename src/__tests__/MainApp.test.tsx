@@ -3,18 +3,14 @@ import { render, screen } from "../test-utils/custom-render";
 
 import MainApp from "../components/MainApp";
 
-jest.mock("../state/colorsState", () => ({
-  useColorsState: () => ({
-    colors: [
-      {
-        id: "id",
-        title: "title",
-        color: "color",
-        rating: 1,
-      },
-    ],
-  }),
-}));
+localStorage["color-organizer"] = JSON.stringify([
+  {
+    id: "id",
+    title: "title",
+    color: "color",
+    rating: 1,
+  },
+]);
 
 describe("component MainApp", () => {
   it("should render properly", () => {

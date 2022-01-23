@@ -4,17 +4,17 @@ import { render, screen } from "../test-utils/custom-render";
 
 import AddColorForm from "../components/AddColorForm";
 
-const mockAddColor = jest.fn();
+const mockAdd = jest.fn();
 
-jest.mock("../state/colorsState", () => ({
-  useColorsState: () => ({
-    addColor: mockAddColor,
-  }),
+jest.mock("../state/colorsStore", () => ({
+  ColorsStore: jest.fn().mockImplementation(() => ({
+    add: mockAdd,
+  })),
 }));
 
 describe("component AddColorForm", () => {
   beforeEach(() => {
-    mockAddColor.mockReset();
+    mockAdd.mockReset();
   });
 
   it("should render properly", () => {
@@ -29,7 +29,7 @@ describe("component AddColorForm", () => {
     expect(screen.getByTestId("addcolor-rating")).toBeVisible();
   });
 
-  it("should call addColor when plus button was clicked", () => {
+  it("should call add when plus button was clicked", () => {
     expect.assertions(1);
 
     render(<AddColorForm />);
@@ -37,26 +37,26 @@ describe("component AddColorForm", () => {
     userEvent.click(screen.getByRole("radio", { name: /2 stars/i }));
     userEvent.click(screen.getByRole("button"));
 
-    expect(mockAddColor).toHaveBeenCalledTimes(1);
+    expect(mockAdd).toHaveBeenCalledTimes(1);
   });
 
-  it("should call addColor when enter pressed in name input", () => {
+  it("should call add when enter pressed in name input", () => {
     expect.assertions(1);
 
     render(<AddColorForm />);
     userEvent.click(screen.getByRole("radio", { name: /4 stars/i }));
     userEvent.type(screen.getByRole("textbox"), "color{enter}");
 
-    expect(mockAddColor).toHaveBeenCalledTimes(1);
+    expect(mockAdd).toHaveBeenCalledTimes(1);
   });
 
-  it("should not call addColor if name is empty", () => {
+  it("should not call add if name is empty", () => {
     expect.assertions(1);
 
     render(<AddColorForm />);
     userEvent.type(screen.getByRole("textbox"), "{enter}");
 
-    expect(mockAddColor).toHaveBeenCalledTimes(0);
+    expect(mockAdd).toHaveBeenCalledTimes(0);
   });
 
   it("should show ColorPicker", async () => {
