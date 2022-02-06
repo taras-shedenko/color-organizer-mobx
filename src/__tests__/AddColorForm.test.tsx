@@ -1,4 +1,5 @@
 import React from "react";
+import { act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "../test-utils/custom-render";
 
@@ -29,32 +30,37 @@ describe("component AddColorForm", () => {
     expect(screen.getByTestId("addcolor-rating")).toBeVisible();
   });
 
-  it("should call add when plus button was clicked", () => {
+  it("should call add when plus button was clicked", async () => {
     expect.assertions(1);
 
     render(<AddColorForm />);
     userEvent.type(screen.getByRole("textbox"), "color");
     userEvent.click(screen.getByRole("radio", { name: /2 stars/i }));
-    userEvent.click(screen.getByRole("button"));
+    await act(async () => await userEvent.click(screen.getByRole("button")));
 
     expect(mockAdd).toHaveBeenCalledTimes(1);
   });
 
-  it("should call add when enter pressed in name input", () => {
+  it("should call add when enter pressed in name input", async () => {
     expect.assertions(1);
 
     render(<AddColorForm />);
     userEvent.click(screen.getByRole("radio", { name: /4 stars/i }));
-    userEvent.type(screen.getByRole("textbox"), "color{enter}");
+    await act(
+      async () =>
+        await userEvent.type(screen.getByRole("textbox"), "color{enter}")
+    );
 
     expect(mockAdd).toHaveBeenCalledTimes(1);
   });
 
-  it("should not call add if name is empty", () => {
+  it("should not call add if name is empty", async () => {
     expect.assertions(1);
 
     render(<AddColorForm />);
-    userEvent.type(screen.getByRole("textbox"), "{enter}");
+    await act(
+      async () => await userEvent.type(screen.getByRole("textbox"), "{enter}")
+    );
 
     expect(mockAdd).toHaveBeenCalledTimes(0);
   });

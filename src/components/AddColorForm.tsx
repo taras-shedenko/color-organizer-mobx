@@ -2,6 +2,7 @@
  * Component to add color item
  */
 import React, { useRef, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { Theme } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -16,12 +17,15 @@ import Rating from "@mui/material/Rating";
 
 import { useColors } from "./ColorsProvider";
 
+type FormValues = {
+  name: string;
+  color: string;
+  rating: number;
+};
+
 export default function AddColorForm() {
   // Compoent's state holds name, color and rating values
-  const [name, setName] = useState("");
-  const [color, setColor] = useState("#FFFFFF");
-  const [rating, setRating] = useState(0);
-  const [isOpen, setOpen] = useState(false);
+  const [isColorPickerOpen, setColorPickerOpen] = useState(false);
 
   // Anchor element for the color picker popper
   const anchorEl = useRef<HTMLDivElement>(null);
@@ -29,15 +33,11 @@ export default function AddColorForm() {
   // Get state's API
   const { add } = useColors();
 
-  // Submit color function
-  const submitColor = () => {
-    if (name.length > 0) {
-      add(name, color, rating);
-      setName("");
-      setColor("#FFFFFF");
-      setRating(0);
-      setOpen(false);
-    }
+  const { control, handleSubmit, reset } = useForm<FormValues>();
+
+  const onSubmit = ({ name, color, rating }: FormValues) => {
+    add(name, color, rating);
+    reset();
   };
 
   // Component's style adjustments
@@ -53,7 +53,6 @@ export default function AddColorForm() {
     },
     paper: {
       height: (theme: Theme) => theme.spacing(12),
-      backgroundColor: color,
     },
     rating: {
       paddingTop: 2,
@@ -63,50 +62,66 @@ export default function AddColorForm() {
   return (
     <Card>
       <CardContent>
-        <Toolbar sx={styles.toolbar} data-testid="addcolor-toolbar">
-          <Input
-            value={name}
-            sx={styles.textField}
-            onChange={(e) => setName(e.currentTarget.value)}
-            inputProps={{
-              onKeyPress: (e) =>
-                /* istanbul ignore next */
-                e.key == "Enter" ? submitColor() : null,
-            }}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Toolbar sx={styles.toolbar} data-testid="addcolor-toolbar">
+            <Controller
+              name="name"
+              control={control}
+              defaultValue=""
+              rules={{ required: "true" }}
+              render={({ field, fieldState: { invalid } }) => (
+                <Input {...field} error={invalid} sx={styles.textField} />
+              )}
+            />
+
+            <IconButton type="submit" sx={styles.addButton}>
+              <AddCircleOutlineIcon />
+            </IconButton>
+          </Toolbar>
+
+          <Controller
+            name="color"
+            control={control}
+            defaultValue="#FFF"
+            render={({ field: { value, onChange } }) => (
+              <>
+                <Paper
+                  elevation={4}
+                  ref={anchorEl}
+                  sx={{ ...styles.paper, backgroundColor: value }}
+                  onClick={() => setColorPickerOpen(!isColorPickerOpen)}
+                  data-testid="addcolor-color"
+                />
+
+                <Popper open={isColorPickerOpen} anchorEl={anchorEl.current}>
+                  <ChromePicker
+                    disableAlpha
+                    color={value}
+                    onChangeComplete={
+                      /* istanbul ignore next */
+                      ({ hex }) => onChange(hex)
+                    }
+                  />
+                </Popper>
+              </>
+            )}
           />
-          <IconButton
-            disabled={name.length == 0}
-            sx={styles.addButton}
-            onClick={submitColor}
-          >
-            <AddCircleOutlineIcon />
-          </IconButton>
-        </Toolbar>
-        <Paper
-          elevation={4}
-          ref={anchorEl}
-          sx={styles.paper}
-          onClick={() => setOpen(!isOpen)}
-          data-testid="addcolor-color"
-        />
-        <Popper open={isOpen} anchorEl={anchorEl.current}>
-          <ChromePicker
-            color={color}
-            disableAlpha
-            onChangeComplete={
-              /* istanbul ignore next */
-              (color) => setColor(color.hex)
-            }
+
+          <Controller
+            name="rating"
+            control={control}
+            defaultValue={0}
+            render={({ field: { value, onChange } }) => (
+              <Rating
+                value={value}
+                onChange={(...[, value]) => onChange(value)}
+                size="large"
+                sx={styles.rating}
+                data-testid="addcolor-rating"
+              />
+            )}
           />
-        </Popper>
-        <Rating
-          name="color-rating-new"
-          value={rating}
-          size="large"
-          sx={styles.rating}
-          onChange={(...[, value]) => setRating(Number(value))}
-          data-testid="addcolor-rating"
-        />
+        </form>
       </CardContent>
     </Card>
   );
